@@ -6,10 +6,13 @@ const login = `SELECT id,email,phone_number,role,password FROM tb_users WHERE em
 
 
 //content
-const content = ``
+const content = `INSERT INTO tb_content 
+(section_id, title,subtitle,description,images,created_at,updated_at) VALUES 
+(?,?,?,?,?,?,?)`
 
 module.exports = {
   register,
   CheckUser,
-  login
+  login,
+  content
 };
