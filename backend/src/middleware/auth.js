@@ -26,6 +26,16 @@ const authCheck = (req,res,next) => {
     }  
 }
 
+const CheckAdmin = async(req,res,next)=>{
+    const userId  = req.user
+
+    if(userId.role !== 'admin'){
+        return res.status(403).json({message:"Access denied: Admin only"})
+    }
+    next()
+}
+
 module.exports = {
-    authCheck
+    authCheck,
+    CheckAdmin
 }

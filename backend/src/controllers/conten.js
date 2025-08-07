@@ -167,9 +167,11 @@ const deleteContent = async (req, res) => {
   }
 };
 
+
 module.exports = {
   content,
   getContents,
   updateContent,
   deleteContent,
 };
+
