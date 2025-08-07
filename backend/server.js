@@ -9,8 +9,15 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'))
+app.use(cors({
+    origin:process.env.ORIGIN,
+    methods:['GET','PUT','POST','DELETE'],
+    allowedHeaders:['Content-Type','Authorization']
+}))
 
 readdirSync('./src/routes').map((e)=>app.use('/api',require('./src/routes/'+e)))
+
+
 
 app.listen(port,()=>console.log(`Server is running on port ${port}`))
 

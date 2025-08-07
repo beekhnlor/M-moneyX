@@ -26,7 +26,7 @@ const authCheck = (req,res,next) => {
     }  
 }
 
-const CheckAdmin = async(req,res,next)=>{
+const authAdmin = async(req,res,next)=>{
     const userId  = req.user
 
     if(userId.role !== 'admin'){
@@ -37,5 +37,5 @@ const CheckAdmin = async(req,res,next)=>{
 
 module.exports = {
     authCheck,
-    CheckAdmin
+    authAdmin
 }
