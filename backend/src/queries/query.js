@@ -9,10 +9,21 @@ const login = `SELECT id,email,phone_number,role,password FROM tb_users WHERE em
 const content = `INSERT INTO tb_content 
 (section_id, title,subtitle,description,images,created_at,updated_at) VALUES 
 (?,?,?,?,?,?,?)`
-
+const oldimages = `SELECT images FROM tb_content WHERE id = ?`
+const updateContent = `
+      UPDATE tb_content 
+      SET section_id = ?, title = ?, subtitle = ?, description = ?, images = ?, updated_at = ?
+      WHERE id = ?
+    `;
+const CheckImages = `SELECT images FROM tb_content WHERE id = ?`
+const deleteContent = `DELETE FROM tb_content WHERE id = ?`
 module.exports = {
   register,
   CheckUser,
   login,
-  content
+  content,
+  oldimages,
+  updateContent,
+  CheckImages,
+  deleteContent
 };
