@@ -9,6 +9,7 @@ const content = `INSERT INTO tb_content
 (section_id, title,subtitle,description,images,created_at,updated_at) VALUES 
 (?,?,?,?,?,?,?)`
 const oldimages = `SELECT images FROM tb_content WHERE id = ?`
+
 const updateContent = `
       UPDATE tb_content 
       SET section_id = ?, title = ?, subtitle = ?, description = ?, images = ?, updated_at = ?
