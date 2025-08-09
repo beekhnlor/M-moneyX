@@ -1,49 +1,126 @@
+// import React from "react";
+// import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// //User layout
+// import LayoutUsers from "../Layout/LayoutUser";
+// // user page
+// import Home from "../pagesUsers/Home";
+// import Service from "../pagesUsers/Service";
+// import Performance from "../pagesUsers/Performance";
+// import Message from "../pagesUsers/Message";
+// import Login from '../auth/Login'
+// import Register from '../auth/Register'
+// import About from "../pagesUsers/About";
+// import DownloadChannel from "../pagesUsers/DownloadChannel";
+// import UserChat from "../pagesUsers/UsersChat";
+
+// //Admin layout
+// import LayoutAdmin from '../Layout/LayoutAdmin'
+// //Admin page
+// import AdminChat from '../admin/AdminChat'
+// import Manage from '../admin/Manage'
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <LayoutUsers />,
+//     children: [
+//       { index: true,element: <Home />, },
+//       { path: "service",element: <Service />,},
+//       { path: "performance",element: <Performance />,},
+//       { path: "message",element: <Message />, },
+//       { path: "about",element:<About/>},
+//       { path: "download",element:<DownloadChannel/>},
+//       { path: "chat",element:<UserChat/>},
+//       { path: "register",element:<Register/>},
+//       { path: "login",element:<Login/>}
+//     ],
+//   },
+//   {
+//     path:"/admin",
+//     element:<LayoutAdmin/>,
+//     children: [
+//       { index:true,element: <AdminChat/>},
+//       { path: "manage",element:<Manage/>}
+//     ]
+//   }
+// ]);
+
+
+// const AppRoutes = () => {
+//   return (
+//     <div>
+//       <RouterProvider router={router} />
+//     </div>
+//   );
+// };
+
+// export default AppRoutes;
+// src/routes/AppRoutes.jsx (แก้ไขแล้ว)
+
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-//User layout
+
+// 1. Import ProtectedRoute Component
+import ProtectedRoute from "../components/ProtectedRoute";
+
+// User layout
 import LayoutUsers from "../Layout/LayoutUser";
-// user page
+// User pages
 import Home from "../pagesUsers/Home";
 import Service from "../pagesUsers/Service";
 import Performance from "../pagesUsers/Performance";
 import Message from "../pagesUsers/Message";
-import Login from '../auth/Login'
-import Register from '../auth/Register'
+import Login from '../auth/Login';
+import Register from '../auth/Register';
 import About from "../pagesUsers/About";
 import DownloadChannel from "../pagesUsers/DownloadChannel";
 import UserChat from "../pagesUsers/UsersChat";
 
-//Admin layout
-import LayoutAdmin from '../Layout/LayoutAdmin'
-//Admin page
-import AdminChat from '../admin/AdminChat'
-import Manage from '../admin/Manage'
+// Admin layout
+import LayoutAdmin from '../Layout/LayoutAdmin';
+// Admin pages
+import AdminChat from '../admin/AdminChat';
+import Manage from '../admin/Manage';
+import AdminDashboard from "../admin/AdminDashboard";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LayoutUsers />,
     children: [
-      { index: true,element: <Home />, },
-      { path: "service",element: <Service />,},
-      { path: "performance",element: <Performance />,},
-      { path: "message",element: <Message />, },
-      { path: "about",element:<About/>},
-      { path: "download",element:<DownloadChannel/>},
-      { path: "chat",element:<UserChat/>},
-      { path: "register",element:<Register/>},
-      { path: "login",element:<Login/>}
+      { index: true, element: <Home /> },
+      { path: "service", element: <Service /> },
+      { path: "performance", element: <Performance /> },
+      { path: "message", element: <Message /> },
+      { path: "about", element: <About /> },
+      { path: "download", element: <DownloadChannel /> },
+      { path: "register", element: <Register /> },
+      { path: "login", element: <Login /> },
+      
+      { 
+        path: "chat",
+        element: (
+          <ProtectedRoute>
+            <UserChat />
+          </ProtectedRoute>
+        )
+      },
     ],
   },
   {
-    path:"/admin",
-    element:<LayoutAdmin/>,
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <LayoutAdmin />
+      </ProtectedRoute>
+    ),
     children: [
-      { index:true,element: <AdminChat/>},
-      { path: "manage",element:<Manage/>}
+ 
+      { index: true, element: <AdminDashboard /> },
+      { path: "chat", element: <AdminChat /> },
+      { path: "manage", element: <Manage /> }
     ]
   }
 ]);
-
 
 const AppRoutes = () => {
   return (

@@ -3,10 +3,9 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const { readdirSync } = require('fs')
-
 const http = require('http')
 const { Server } = require('socket.io')
-
+const connected = require('./src/connectdb/connecting');
 const port = process.env.PORT
 const app = express()
 
@@ -31,52 +30,71 @@ const io = new Server(server, {
     }
 });
 
-const adminSockets = new Set(); 
+const adminSockets = new Set();
 
 io.on('connection', (socket) => {
-  console.log(`มี Client เชื่อมต่อเข้ามา: ${socket.id}`);
+  console.log(`✅ Client connected: ${socket.id}`);
 
   socket.on('join', ({ userId, role }) => {
     if (role === 'admin') {
       adminSockets.add(socket.id);
-      console.log(`Admin (${socket.id}) ได้เข้าร่วม`);
+      console.log(`Admin (Socket ID: ${socket.id}) has joined.`);
     } else {
-
-      socket.join(userId);
-      console.log(`User ${userId} (${socket.id}) ได้เข้าร่วมห้อง: ${userId}`);
+      socket.join(userId.toString()); 
+      console.log(`User ${userId} (Socket ID: ${socket.id}) has joined room: ${userId}`);
     }
   });
 
-  socket.on('sendMessageFromUser', ({ userId, message }) => {
-    console.log(`ข้อความจาก User ${userId}: ${message}`);
+  socket.on('sendMessageFromUser', async ({ userId, message }) => { 
+    console.log(`Message from User ${userId}: ${message}`);
+    try {
+        const sql = "INSERT INTO tb_message (conversation_id, sender_id, sender_role, message_text) VALUES (?, ?, 'user', ?)";
+        await connected.query(sql, [userId, userId, message]);
+        console.log(`[DB] Message from User ${userId} saved.`);
 
-    adminSockets.forEach(adminSocketId => {
-      io.to(adminSocketId).emit('newMessageFromServer', {
-        from: userId,
-        message: message,
-        timestamp: new Date()
-      });
-    });
+  
+        adminSockets.forEach(adminSocketId => {
+            io.to(adminSocketId).emit('newMessageFromServer', {
+                from: userId.toString(),
+                message: message,
+                timestamp: new Date()
+            });
+        });
+    } catch (error) {
+        console.error("❌ [DB Error] Could not save message from user:", error);
+    }
   });
 
-  socket.on('sendMessageFromAdmin', ({ targetUserId, message }) => {
-    console.log(`Admin (${socket.id}) ส่งข้อความไปหา ${targetUserId}: ${message}`);
 
-    io.to(targetUserId).emit('newMessageFromServer', {
-      from: 'admin',
-      message: message,
-      timestamp: new Date()
-    });
+  socket.on('sendMessageFromAdmin', async ({ adminId, targetUserId, message }) => { 
+    console.log(`Admin ${adminId} is replying to User ${targetUserId}: ${message}`);
+    try {
+        const sql = "INSERT INTO tb_message (conversation_id, sender_id, sender_role, message_text) VALUES (?, ?, 'admin', ?)";
+        await connected.query(sql, [targetUserId, adminId, message]);
+        console.log(`[DB] Reply from Admin ${adminId} to User ${targetUserId} saved.`);
+
+     
+        io.to(targetUserId.toString()).emit('newMessageFromServer', {
+            from: 'admin',
+            message: message,
+            timestamp: new Date()
+        });
+    } catch (error) {
+        console.error("❌ [DB Error] Could not save message from admin:", error);
+    }
   });
 
+  
   socket.on('disconnect', () => {
-    console.log(`ตัดการเชื่อมต่อ: ${socket.id}`);
-
+    console.log(`❌ Client disconnected: ${socket.id}`);
     if (adminSockets.has(socket.id)) {
       adminSockets.delete(socket.id);
-      console.log(`Admin (${socket.id}) ออกจากระบบ`);
+      console.log(`Admin (Socket ID: ${socket.id}) has left.`);
     }
   });
 });
 
-server.listen(port,()=>console.log(`Server is running on port ${port}`))
+
+server.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});

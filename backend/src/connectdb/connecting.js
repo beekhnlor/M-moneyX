@@ -9,5 +9,13 @@ const connected = createPool({
     connectionLimit: 10,
     queueLimit: 0
 })
+connected.getConnection()
+    .then(connection => {
+        console.log('✅ MySQL Database connected successfully');
+        connection.release(); 
+    })
+    .catch(error => {
+        console.error('❌ MySQL Database connection failed:', error.message);
+})
 
 module.exports = connected
