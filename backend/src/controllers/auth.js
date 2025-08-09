@@ -35,14 +35,14 @@ const register = async(req,res)=> {
 }
 
 const login = async(req,res)=>{
-    const { email,password } = req.body
+    const { phone_number,password } = req.body
 
     try{
 
-        const [ loginUser ] = await connected.query(querise.login,[email])
+        const [ loginUser ] = await connected.query(querise.login,[phone_number])
 
         if(loginUser.length === 0){
-            return res.status(400).json({message:"Login Invalid"})
+            return res.status(400).json({message:"No User"})
         }
 
         const user = loginUser[0]
