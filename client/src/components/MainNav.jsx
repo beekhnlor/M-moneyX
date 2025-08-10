@@ -77,7 +77,7 @@ const MainNav = () => {
                 )}
                 
                 <span className="text-sm font-medium text-gray-800">
-                  ສະບາຍດີ {user.user_name}
+                  {user.user_name}
                 </span>
 
                 <button

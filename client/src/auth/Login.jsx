@@ -111,7 +111,7 @@ const Login = () => {
       return;
     }
     if (user.role === 'admin') {
-      navigate('/admin/dashboard');
+      navigate('/admin/chat');
     } else {
       navigate('/');
     }

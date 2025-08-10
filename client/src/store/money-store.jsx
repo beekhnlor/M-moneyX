@@ -62,7 +62,7 @@ const moneyStore = (set) => ({
 
 const usePersist = {
     name: 'money-store',
-    storage: createJSONStorage(() => localStorage)
+    storage: createJSONStorage(() => sessionStorage) 
 };
 
 const useMoneyStore = create(persist(moneyStore, usePersist));
