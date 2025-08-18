@@ -1,7 +1,12 @@
-import { NavLink } from "react-router-dom";
-import { LayoutDashboard, SquareChartGantt, LogOut } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from "react-router-dom";
+import { 
+    LayoutDashboard, 
+    FilePenLine, 
+    MessagesSquare, 
+    LogOut 
+} from "lucide-react";
 import useMoneyStore from '../../store/money-store';
+
 const SidebarAdmin = () => {
   const { actionLogout } = useMoneyStore();
   const navigate = useNavigate();
@@ -10,66 +15,63 @@ const SidebarAdmin = () => {
     actionLogout();
     navigate("/");
   };
+
+  const baseLinkClass = "flex items-center px-4 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:bg-gray-800 hover:text-white transition-colors duration-200";
+  const activeLinkClass = "bg-gray-800 text-white";
+
   return (
-    <div className="bg-gray-800 w-64 text-gray-100 flex flex-col h-screen">
-      <div
-        className="h-24 bg-gray-900 flex items-center justify-center
-      text-2xl font-bold"
-      >
-        Admin Panel
+  
+    <div className="bg-gray-900 w-64 text-gray-100 flex flex-col h-screen">
+      
+
+      <div className="h-20 flex items-center justify-center border-b border-gray-700">
+        <h1 className="text-2xl font-bold tracking-wider">Admin Panel</h1>
       </div>
 
-      <nav className="flex-1 px-4 py-4 space-y-2">
+  
+      <nav className="flex-1 px-4 py-6 space-y-2">
         <NavLink
-          to={"/admin"}
+          to="/admin"
           end
           className={({ isActive }) =>
-            isActive
-              ? "bg-gray-900 text-white px-4 py-2 flex items-center rounded-md"
-              : "text-gray-300 px-4 py-2 hover:bg-gray-700 hover:text-white rounded flex items-center"
+            `${baseLinkClass} ${isActive ? activeLinkClass : ""}`
           }
         >
-          <LayoutDashboard className="mr-2" />
+          <LayoutDashboard className="mr-3 h-5 w-5" />
           Dashboard
         </NavLink>
 
         <NavLink
-          to={"manage"}
+          to="manage" 
           className={({ isActive }) =>
-            isActive
-              ? "bg-gray-900 text-white px-4 py-2 flex items-center rounded-md"
-              : "text-gray-300 px-4 py-2 hover:bg-gray-700 hover:text-white rounded flex items-center"
+            `${baseLinkClass} ${isActive ? activeLinkClass : ""}`
           }
         >
-          <SquareChartGantt className="mr-2" />
-          ManageContent
+          <FilePenLine className="mr-3 h-5 w-5" />
+          Manage Content
         </NavLink>
 
         <NavLink
-          to={"chat"}
+          to="chat" 
           className={({ isActive }) =>
-            isActive
-              ? "bg-gray-900 text-white px-4 py-2 flex items-center rounded-md"
-              : "text-gray-300 px-4 py-2 hover:bg-gray-700 hover:text-white rounded flex items-center"
+            `${baseLinkClass} ${isActive ? activeLinkClass : ""}`
           }
         >
-          <SquareChartGantt className="mr-2" />
+          <MessagesSquare className="mr-3 h-5 w-5" />
           Conversations
         </NavLink>
       </nav>
 
-      <div>
-        <NavLink
+
+      <div className="px-4 py-4 border-t border-gray-700">
+        <button
           onClick={handleLogout}
-          className={({ isActive }) =>
-            isActive
-              ? "bg-gray-900 text-white px-4 py-2 flex items-center rounded-md"
-              : "text-gray-300 px-4 py-2 hover:bg-gray-700 hover:text-white rounded flex items-center"
-          }
+
+          className={`${baseLinkClass} w-full`} 
         >
-          <LogOut className="mr-2" />
+          <LogOut className="mr-3 h-5 w-5" />
           Logout
-        </NavLink>
+        </button>
       </div>
     </div>
   );

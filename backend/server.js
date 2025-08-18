@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
       socket.join(userId.toString()); 
       console.log(`User ${userId} (Socket ID: ${socket.id}) has joined room: ${userId}`);
     }
-  });
+});
 
   socket.on('sendMessageFromUser', async ({ userId, message }) => { 
     console.log(`Message from User ${userId}: ${message}`);
@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
   });
 
   
-  socket.on('disconnect', () => {
+socket.on('disconnect', () => {
     console.log(`❌ Client disconnected: ${socket.id}`);
     if (adminSockets.has(socket.id)) {
       adminSockets.delete(socket.id);
