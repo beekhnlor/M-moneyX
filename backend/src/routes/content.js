@@ -5,7 +5,7 @@ const upload = require('../middleware/upload-image')
 const { authCheck,authAdmin } = require('../middleware/auth')
 
 router.post('/content-upload-images',authCheck,authAdmin,upload.array('image'),content)
-router.get('/getcontent',authCheck,authAdmin,getContents)
+router.get('/getcontent',getContents)
 router.put('/content/:id',authCheck,authAdmin,upload.array('image'), updateContent);
 router.delete('/delete/content/:id',authCheck,authAdmin,deleteContent)
 

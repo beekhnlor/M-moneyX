@@ -1,9 +1,80 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { getPublicContents } from '../api/api'; 
 
 const Home = () => {
-  return (
-    <div>Home</div>
-  )
-}
+  const [content, setContent] = useState(null);
+  const [loading,setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-export default Home
+  useEffect(() => {
+    const fetchHomeContent = async () => {
+      try {
+    
+        const response = await getPublicContents();
+        
+        if (response.data && response.data.length > 0) {
+          setContent(response.data[0]);
+        } else {
+          setContent(null); 
+        }
+
+      } catch (err) {
+        setError(err.response ? err.response.data.message : err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHomeContent();
+  }, []); 
+
+
+
+  if (loading) {
+    return <div className="text-center p-20 text-gray-500">ກຳລັງໂຫລດຂໍ້ມູນ...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center p-20 text-red-600">ເກີດຂໍ້ຜິດພາດ: {error}</div>;
+  }
+  
+  if (!content) {
+      return <div className="text-center p-20 text-gray-500">ບໍ່ພົບຂໍ້ມູນ Content</div>;
+  }
+
+  return (
+    <main className="bg-white">
+      <div className="max-w-screen-2xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          
+          <div className="lg:w-1/2 w-full text-center lg:text-left">
+            <h2 className="text-lg font-semibold text-gray-600 mb-2">
+                ບໍລິສັດ ລາວ ໂມບາຍມັນນີ້ ຈຳກັດ
+            </h2>
+            <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-4 tracking-tight">
+                {content.title}
+            </h1>
+            <p className="text-gray-700 leading-relaxed">
+                {content.description}
+            </p>
+          </div>
+
+          <div className="lg:w-1/2 w-full flex flex-col gap-8">
+      
+            {content.images && [...content.images].reverse().map((imageUrl, index) => (
+              <img 
+                key={index} 
+                src={imageUrl} 
+                alt={`M-Money content image ${index + 1}`} 
+                className="w-full h-auto object-cover rounded-xl shadow-lg"
+              />
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </main>
+  );
+};
+
+export default Home;

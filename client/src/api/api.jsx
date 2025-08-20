@@ -22,6 +22,7 @@ export const getContents = async (token) => {
 export const updateContent = async (token, id, formData) => {
   return await axios.put(`${API_BASE_URL}/content/${id}`, formData, {
     headers: {
+      'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${token}`, 
     },
   });
@@ -32,5 +33,9 @@ export const deleteContent = async (token, id) => {
     headers: {
       'Authorization': `Bearer ${token}`, 
     },
+  });
+};
+export const getPublicContents= async()=> {
+  return await axios.get(`${API_BASE_URL}/getcontent`, {
   });
 };

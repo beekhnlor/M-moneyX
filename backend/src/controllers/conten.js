@@ -45,17 +45,24 @@ const getContents = async (req, res) => {
     return res.status(500).json({ message: "Fetch Error" });
   }
 };
+
+
 const updateContent = async (req, res) => {
+  // console.log('--- [UPDATE] 1. CONTROLLER REACHED ---');
   const { id } = req.params;
   const { section_id, title, subtitle, description } = req.body;
 
   try {
+    // console.log(`--- [UPDATE] 2. FETCHING OLD CONTENT FOR ID: ${id} ---`);
     const [rows] = await connected.query(
       "SELECT images FROM tb_content WHERE id = ?",
       [id]
     );
+    // console.log('--- [UPDATE] 3. OLD CONTENT FETCHED ---');
+
 
     if (rows.length === 0) {
+      console.log('--- [UPDATE] Content not found, sending 404 ---');
       return res
         .status(404)
         .json({ message: "Content not found with the provided ID." });
@@ -65,9 +72,12 @@ const updateContent = async (req, res) => {
     const oldImagePaths = oldContent.images;
 
     let newImagePaths = oldImagePaths;
-
+    
+    // console.log('--- [UPDATE] 4. CHECKING FOR NEW FILES ---');
     if (req.files && req.files.length > 0) {
+      // console.log('--- [UPDATE] New files found, processing... ---');
       if (oldImagePaths) {
+        // console.log('--- [UPDATE] Deleting old images from Cloudinary... ---');
         const oldImageUrls = oldImagePaths.split(",");
 
         const publicIds = oldImageUrls.map((url) => {
@@ -84,10 +94,12 @@ const updateContent = async (req, res) => {
         await Promise.all(
           publicIds.map((publicId) => cloudinary.uploader.destroy(publicId))
         );
+        // console.log('--- [UPDATE] Old images deleted. ---');
       }
       newImagePaths = req.files.map((file) => file.path).join(",");
     }
 
+    // console.log('--- [UPDATE] 5. PREPARING TO UPDATE DATABASE ---');
     const [result] = await connected.query(queries.updateContent, [
       section_id,
       title,
@@ -97,26 +109,19 @@ const updateContent = async (req, res) => {
       new Date(),
       id,
     ]);
-
-    if (result.affectedRows === 0 && result.changedRows === 0) {
-      return res
-        .status(200)
-        .json({ message: "No changes were made to the content." });
-    }
+    // console.log('--- [UPDATE] 6. DATABASE UPDATED. SENDING SUCCESS RESPONSE ---');
 
     return res.status(200).json({
       message: "Content updated successfully!",
-      data: {
-        id: id,
-        ...req.body,
-        images: newImagePaths.split(","),
-      },
+   
     });
+    
   } catch (err) {
-    console.error("Error updating content:", err);
+    console.error("--- [UPDATE] !!! CATCH BLOCK ERROR !!! ---", err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 const deleteContent = async (req, res) => {
   const { id } = req.params;
 
