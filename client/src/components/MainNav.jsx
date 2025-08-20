@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import { Menu, X } from "lucide-react";
-import useMoneyStore from '../store/money-store'; // ✨ NEW: 1. ນຳເຂົ້າ Zustand store
+import useMoneyStore from '../store/money-store';
 
 import logoImage from "../assets/M moneyX.jpeg"; 
 
 const MainNav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const token = useMoneyStore((state) => state.token); // ✨ NEW: 2. ດຶງ token ຈາກ store
+  const token = useMoneyStore((state) => state.token);
+  const actionLogout = useMoneyStore((state) => state.actionLogout);
+  const navigate = useNavigate(); 
+
+  // 4. ສ້າງຟັງຊັນສຳລັບການ Logout
+  const handleLogout = () => {
+    actionLogout(); 
+    navigate('/');    
+  };
 
   return (
     <header className="bg-red-600 rounded-bl-[2rem] border-b-2 border-red-500 relative">
@@ -48,14 +56,23 @@ const MainNav = () => {
           <Link to="/download" className="hover:text-black transition-colors text-white">
             ດາວໂຫຼດ
           </Link>
-          <Link to="/login" className="hover:text-black transition-colors text-white">
-            ເຂົ້າສູ່ລະບົບ
-          </Link>
           <Link to={token ? "/chat" : "/login"} className="hover:text-black transition-colors text-white">
             ສົນທະນາ
           </Link>
+          
+          {/* === 5. ເພີ່ມເງື່ອນໄຂສະແດງປຸ່ມ Login/Logout === */}
+          {token ? (
+            <button onClick={handleLogout} className="hover:text-black transition-colors text-white">
+              ອອກຈາກລະບົບ
+            </button>
+          ) : (
+            <Link to="/login" className="hover:text-black transition-colors text-white">
+              ເຂົ້າສູ່ລະບົບ
+            </Link>
+          )}
         </nav>
 
+        {/* === ປຸ່ມ Hamburger === */}
         <div className="lg:hidden">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white">
             {isMenuOpen ? <X size={30} /> : <Menu size={30} />}
@@ -63,7 +80,7 @@ const MainNav = () => {
         </div>
       </div>
 
-
+      {/* === ເມນູສຳລັບ Mobile (Dropdown) === */}
       {isMenuOpen && (
         <nav className="lg:hidden absolute top-full left-0 w-full bg-red-600 border-t-2 border-red-500 flex flex-col items-center gap-4 py-4 z-50">
           <Link to="/about" className="hover:text-gray-400 transition-colors text-white text-lg" onClick={() => setIsMenuOpen(false)}>
@@ -81,13 +98,22 @@ const MainNav = () => {
           <Link to="/download" className="hover:text-gray-400  transition-colors text-white text-lg" onClick={() => setIsMenuOpen(false)}>
             ດາວໂຫຼດ
           </Link>
-          <Link to="/login" className="hover:text-gray-400  transition-colors text-white text-lg" onClick={() => setIsMenuOpen(false)}>
-            ເຂົ້າສູ່ລະບົບ
-          </Link>
-  
           <Link to={token ? "/chat" : "/login"} className="hover:text-gray-400  transition-colors text-white text-lg" onClick={() => setIsMenuOpen(false)}>
             ສົນທະນາ
           </Link>
+          
+          {token ? (
+            <button 
+              onClick={() => { handleLogout(); setIsMenuOpen(false); }} 
+              className="hover:text-gray-400 transition-colors text-white text-lg"
+            >
+              ອອກຈາກລະບົບ
+            </button>
+          ) : (
+            <Link to="/login" className="hover:text-gray-400  transition-colors text-white text-lg" onClick={() => setIsMenuOpen(false)}>
+              ເຂົ້າສູ່ລະບົບ
+            </Link>
+          )}
         </nav>
       )}
     </header>

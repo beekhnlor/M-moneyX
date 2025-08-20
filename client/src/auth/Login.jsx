@@ -42,7 +42,7 @@ const Login = () => {
     if (user.role === 'admin') {
       navigate('/admin/chat');
     } else {
-      navigate('/');
+      navigate('/chat');
     }
   };
 
