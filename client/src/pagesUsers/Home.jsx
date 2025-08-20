@@ -6,14 +6,12 @@ const Home = () => {
   const [loading,setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchHomeContent = async () => {
       try {
-    
         const response = await getPublicContents();
-        
-        if (response.data && response.data.length > 0) {
-          setContent(response.data[0]);
+        if (response.data && response.data.result && response.data.result.length > 0) {
+          setContent(response.data.result[0]); 
         } else {
           setContent(null); 
         }
@@ -26,7 +24,7 @@ const Home = () => {
     };
 
     fetchHomeContent();
-  }, []); 
+  }, []);
 
 
 

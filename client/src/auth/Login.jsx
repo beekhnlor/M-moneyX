@@ -1,80 +1,9 @@
-/* import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import useMoneyStore from "../store/money-store";
-import { useNavigate } from 'react-router-dom'
-const Login = () => {
-   
-  const actionLogin = useMoneyStore((state)=>state.actionLogin)
-  const user = useMoneyStore((state)=>state.user)
-  // console.log('form zustand',user)
-  const navigate = useNavigate()
-
-  const [form, setForm] = useState({
-    phone_number: "",
-    password: "",
-  });
-
-  const handleOnChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try{
-      const res = await actionLogin(form)
-      const role = res.data.payload.role
-      roleRedireact(role)
-      toast.success('welcome')
-      // console.log(res)
-    }catch(err){
-       console.log(err)
-       const errMsg = err.response?.data?.message
-       toast.error(errMsg)
-    }
-  };
-
-  const roleRedireact = (role) => {
-    if(role === 'admin'){
-      navigate('/admin')
-    }else{
-      navigate('/')
-    }
-  }
-
-  return (
-    <div>
-      Login
-      <form onSubmit={handleSubmit}>
-        phone_number
-        <input
-          className="border"
-          onChange={handleOnChange}
-          name="phone_number"
-          type="phone_number"
-        />
-        Password
-        <input
-          className="border"
-          onChange={handleOnChange}
-          name="password"
-          type="text"
-        />
-        <button className="bg-gray-100 rounded-md p-2">Login</button>
-      </form>
-    </div>
-  );
-};
-
-export default Login;
- */
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import useMoneyStore from "../store/money-store";
-
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import logoImage from "../assets/logo-circle.jpeg";
+import logobig from "../assets/logo-big.png"
 
 const Login = () => {
   const actionLogin = useMoneyStore((state) => state.actionLogin);
@@ -97,10 +26,10 @@ const Login = () => {
       const res = await actionLogin(form);
       const userPayload = res.data.payload;
       redirectUser(userPayload, from);
-      toast.success('Welcome!');
+      toast.success('ຍິນດີຕ້ອນຮັບ!');
     } catch (err) {
       console.log(err);
-      const errMsg = err.response?.data?.message || "An error occurred.";
+      const errMsg = err.response?.data?.message || "ເກີດຂໍ້ຜິດພາດ.";
       toast.error(errMsg);
     }
   };
@@ -117,49 +46,94 @@ const Login = () => {
     }
   };
 
-
   return (
-    <div className="max-w-md mx-auto mt-10 p-8 border rounded-lg shadow-lg bg-white">
-      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700">Phone Number</label>
-          <input
-            id="phone_number"
-            className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            onChange={handleOnChange}
-            name="phone_number"
-            type="tel" 
-            required
-            autoComplete="tel"
-          />
+    <div className="flex min-h-[calc(100vh-6rem)] items-center bg-white">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4">
+        
+        <div className="hidden md:flex flex-col items-center text-center">
+            <img src={logobig} alt="M MoneyX Logo" className="w-96 h-96" />
+            
+            {/* === ຈຸດທີ່ແກ້ໄຂ === */}
+            <h2 className="text-2xl font-bold text-gray-800 mb-2 -mt-16">M MoneyX ແມ່ນຫຍັງ?</h2>
+            
+            <p className="text-gray-600 max-w-md">
+                M-Money ແມ່ນກະເປົາເງິນດິຈິຕອນເທິງມືຖື ໂດຍສາມາດໃຊ້ຈ່າຍໄດ້ກັບເງິນສົດ, ນຳໃຊ້ເບີໂທລະສັບ ທຸກເຄືອຂ່າຍ ໃນການລົງທະບຽນ ເຊິ່ງຈະເຮັດໃຫ້ການເຮັດທຸລະກຳການເງິນ ງ່າຍ ສະດວກ ປອດໄພ ໄດ້ມາດຕະຖານ.
+            </p>
         </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-          <input
-            id="password"
-            className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            onChange={handleOnChange}
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-          />
-        </div>
-        <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Login
-        </button>
-      </form>
 
-      <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">
-          ຖ້າຍັງບໍ່ມີບັນຊີ?{' '}
-          <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
-            ສະໝັກທີ່ນີ້
-          </Link>
-        </p>
+        <div className="w-full max-w-md mx-auto">
+          <div className="text-center">
+            <img src={logoImage} alt="M Money Logo" className="mx-auto h-16 w-auto" />
+            <h1 className="mt-6 text-3xl font-bold tracking-tight text-red-600">
+              ຍິນດີຕ້ອນຮັບທ່ານເຂົ້າສູ່ລະບົບ
+            </h1>
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+            <div>
+              <label htmlFor="phone_number" className="block text-md font-medium text-gray-700">
+                ເບີໂທລະສັບ
+              </label>
+              <div className="mt-1">
+                <input
+                  id="phone_number"
+                  className="w-full px-3 py-3 bg-gray-100 border border-gray-200 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+                  onChange={handleOnChange}
+                  name="phone_number"
+                  type="tel" 
+                  required
+                  autoComplete="tel"
+                  placeholder="ກະະລຸນາປ້ອນເບີໂທ"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="password" className="block text-md font-medium text-gray-700">
+                ລະຫັດຜ່ານ
+              </label>
+              <div className="mt-1">
+                <input
+                  id="password"
+                  className="w-full px-3 py-3 bg-gray-100 border border-gray-200 rounded-md shadow-sm focus:ring-red-500 focus:border-red-500"
+                  onChange={handleOnChange}
+                  name="password"
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  placeholder="ກະະລຸນາປ້ອນລະຫັດຜ່ານ"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end">
+              <div className="text-sm">
+                <Link to="/forgot-password" className="font-medium text-red-600 hover:text-red-500">
+                  ລືມລະຫັດຜ່ານ?
+                </Link>
+              </div>
+            </div>
+
+            <div>
+              <button 
+                type="submit" 
+                className="w-full py-3 px-4 bg-red-600 text-white font-semibold rounded-md shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+              >
+                ເຂົ້າສູ່ລະບົບ
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              ທ່ານບໍ່ມີບັນຊີເທື່ອແມ່ນບໍ່ ?{' '}
+              <Link to="/register" className="font-medium text-red-600 hover:text-red-500">
+                ຄລິກເພື່ອລົງທະບຽນ
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
-
     </div>
   );
 };
