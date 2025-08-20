@@ -47,13 +47,12 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-6rem)] items-center bg-white">
+    <div className="flex min-h-[calc(85vh-6rem)] items-center bg-white">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4">
         
         <div className="hidden md:flex flex-col items-center text-center">
             <img src={logobig} alt="M MoneyX Logo" className="w-96 h-96" />
             
-            {/* === ຈຸດທີ່ແກ້ໄຂ === */}
             <h2 className="text-2xl font-bold text-gray-800 mb-2 -mt-16">M MoneyX ແມ່ນຫຍັງ?</h2>
             
             <p className="text-gray-600 max-w-md">
