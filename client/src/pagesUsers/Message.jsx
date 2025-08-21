@@ -1,7 +1,7 @@
 import React from 'react';
 
 // === Import รูปภาพและไอคอนที่จำเป็นทั้งหมด ===
-// import serviceGraphic from '../assets/sharp_mobile_purchase.svg'; 
+import serviceGraphic from '../assets/sharp_mobile_purchase.svg'; 
 import { FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import footerLogo from '../assets/M moneyX.jpeg'; // โลโก้สำหรับ Footer
 
