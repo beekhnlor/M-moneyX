@@ -1,7 +1,7 @@
 import React from 'react';
 
 // === Import รูปภาพและไอคอนที่จำเป็นทั้งหมด ===
-import serviceGraphic from '../assets/sharp_mobile_purchase.svg'; 
+// import serviceGraphic from '../assets/sharp_mobile_purchase.svg'; 
 import { FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import footerLogo from '../assets/M moneyX.jpeg'; // โลโก้สำหรับ Footer
 
@@ -84,13 +84,8 @@ const Footer = () => {
   );
 };
 
-
-// =============================================================
-// ===      ส่วนประกอบหลักของหน้า Message (โค้ดเก่าของคุณ)     ===
-// =============================================================
 const Message = () => {
   return (
-    // ใช้ React Fragment (<>...</>) เพื่อรวมเนื้อหาและ Footer
     <>
       <div className="bg-white min-h-[calc(100vh-80px)] relative overflow-hidden">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-72">
@@ -122,7 +117,7 @@ const Message = () => {
         />
       </div>
 
-      {/* === เรียกใช้ Component Footer ที่นี่ === */}
+  
       <Footer />
     </>
   );
