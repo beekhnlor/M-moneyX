@@ -17,7 +17,7 @@ app.use(morgan('dev'))
 app.use(cors({
     origin:process.env.ORIGIN,
     methods:['GET','PUT','POST','DELETE'],
-    allowedHeaders:['Content-Type','Authorization']
+    allowedHeaders:['Content-Type','Authorization','authtoken']
 }))
 
 readdirSync('./src/routes').map((e)=>app.use('/api',require('./src/routes/'+e)))

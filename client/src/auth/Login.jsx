@@ -24,9 +24,24 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await actionLogin(form);
+      
+      // ดึงข้อมูล payload และ token ออกมาจาก response
       const userPayload = res.data.payload;
+      const token = res.data.token; // ++ เพิ่ม: ดึง token ++
+
+      // ++ เพิ่ม: ตรวจสอบว่ามี token หรือไม่ ก่อนจะบันทึก ++
+      if (token) {
+        // ++ เพิ่ม: บันทึก token ลงใน localStorage ++
+        localStorage.setItem('token', token);
+      } else {
+        // ++ เพิ่ม: แจ้งเตือนถ้า server ไม่ได้ส่ง token กลับมา ++
+        console.warn("ไม่พบ Token ใน Response ของการล็อกอิน");
+      }
+      
+      // ส่วนนี้ยังทำงานเหมือนเดิม
       redirectUser(userPayload, from);
       toast.success('ຍິນດີຕ້ອນຮັບ!');
+
     } catch (err) {
       console.log(err);
       const errMsg = err.response?.data?.message || "ເກີດຂໍ້ຜິດພາດ.";

@@ -1,164 +1,19 @@
-// // src/pagesUsers/UsersChat.js
-
-// import React, { useState, useEffect, useRef } from 'react';
-// import { io } from 'socket.io-client';
-// import axios from 'axios';
-// import useMoneyStore from '../store/money-store';
-// import { FiSend } from 'react-icons/fi';
-
-// const UsersChat = () => {
-//     const [socket, setSocket] = useState(null);
-//     const [messages, setMessages] = useState([]);
-//     const [currentMessage, setCurrentMessage] = useState('');
-//     const [isLoadingHistory, setIsLoadingHistory] = useState(true);
-//     const messagesEndRef = useRef(null);
-
-//     const { user } = useMoneyStore();
-//     const userInfo = {
-//         id: user?.id,
-//         role: user?.role,
-//     };
-
-//     useEffect(() => {
-//         const fetchChatHistory = async () => {
-//             if (userInfo.id) {
-//                 setIsLoadingHistory(true);
-//                 try {
-//                     const response = await axios.get(`http://localhost:8000/api/chat/history/${userInfo.id}`);
-//                     setMessages(response.data);
-//                 } catch (error) {
-//                     console.error("Failed to load chat history:", error);
-//                 } finally {
-//                     setIsLoadingHistory(false);
-//                 }
-//             }
-//         };
-//         fetchChatHistory();
-//     }, [userInfo.id]);
-
-//     useEffect(() => {
-//         if (userInfo.id) {
-//             const newSocket = io('http://localhost:8000');
-//             setSocket(newSocket);
-
-//             newSocket.on('connect', () => {
-//                 newSocket.emit('join', { userId: userInfo.id, role: userInfo.role });
-//             });
-
-//             newSocket.on('newMessageFromServer', (data) => {
-//                 setMessages(prev => [...prev, data]);
-//             });
-
-//             newSocket.on('connect_error', (err) => {
-//                 console.error("Socket connection failed:", err.message);
-//             });
-
-//             return () => newSocket.close();
-//         }
-//     }, [userInfo.id]);
-
-//     const scrollToBottom = () => {
-//         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-//     };
-//     useEffect(scrollToBottom, [messages]);
-
-//     const handleSendMessage = (e) => {
-//         e.preventDefault();
-//         if (currentMessage.trim() && socket && userInfo.id) {
-//             const messageData = { from: userInfo.id.toString(), message: currentMessage, timestamp: new Date() };
-//             setMessages(prev => [...prev, messageData]);
-//             socket.emit('sendMessageFromUser', { userId: userInfo.id, message: currentMessage });
-//             setCurrentMessage('');
-//         }
-//     };
-
-//     return (
-//         <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
-//             {/* Header */}
-//             <header className="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 shadow-md">
-//                 <h3 className="text-lg font-semibold text-center text-white">💬 M-MONEY Support</h3>
-//             </header>
-
-//             {/* Chat Messages */}
-//             <main className="flex-1 overflow-y-auto p-4 bg-gray-50">
-//                 {isLoadingHistory ? (
-//                     <div className="flex justify-center items-center h-full text-gray-500">Loading chat history...</div>
-//                 ) : (
-//                     <div className="flex flex-col space-y-4">
-//                         {messages.map((msg, index) => {
-//                             const isUser = msg.from === userInfo.id.toString();
-//                             return (
-//                                 <div
-//                                     key={index}
-//                                     className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
-//                                 >
-//                                     <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
-//                                         {!isUser && (
-//                                             <span className="text-xs text-gray-500 mb-1">
-//                                                 {msg.from === 'admin' ? 'Admin' : 'User'}
-//                                             </span>
-//                                         )}
-//                                         <div
-//                                             className={`px-4 py-2 rounded-2xl max-w-xs md:max-w-md break-words shadow-sm ${
-//                                                 isUser
-//                                                     ? 'bg-blue-600 text-white rounded-br-none'
-//                                                     : 'bg-white text-gray-800 rounded-bl-none border'
-//                                             }`}
-//                                         >
-//                                             <p>{msg.message}</p>
-//                                         </div>
-//                                         <span className="text-[10px] text-gray-400 mt-1">
-//                                             {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-//                                         </span>
-//                                     </div>
-//                                 </div>
-//                             );
-//                         })}
-//                         <div ref={messagesEndRef} />
-//                     </div>
-//                 )}
-//             </main>
-
-//             {/* Input */}
-//             <footer className="bg-white p-3 border-t border-gray-200 flex-shrink-0">
-//                 <form className="flex items-center space-x-3" onSubmit={handleSendMessage}>
-//                     <input
-//                         type="text"
-//                         value={currentMessage}
-//                         onChange={(e) => setCurrentMessage(e.target.value)}
-//                         placeholder="Type a message..."
-//                         className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                         autoComplete="off"
-//                     />
-//                     <button
-//                         type="submit"
-//                         className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition disabled:bg-blue-300 disabled:cursor-not-allowed"
-//                         disabled={!currentMessage.trim()}
-//                     >
-//                         <FiSend size={18} />
-//                     </button>
-//                 </form>
-//             </footer>
-//         </div>
-//     );
-// };
-
-// export default UsersChat;
-// src/pagesUsers/UsersChat.js
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 import useMoneyStore from "../store/money-store";
 import logoImage from "../assets/logo-circle.jpeg";
 
-import { SendHorizontal, Plus } from "lucide-react";
+import { SendHorizontal, Plus, Loader2 } from "lucide-react";
 
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
-import cameraIcon from "../assets/icons/camera-icon.svg"; 
-import galleryIcon from "../assets/icons/gallery-icon.svg"; 
-import micIcon from "../assets/icons/mic-icon.svg";       
-import mapPinIcon from "../assets/icons/map-pin-icon.svg";  
-import folderIcon from "../assets/icons/folder-icon.svg";   
+import cameraIcon from "../assets/icons/camera-icon.svg";
+import galleryIcon from "../assets/icons/gallery-icon.svg";
+import micIcon from "../assets/icons/mic-icon.svg";
+import mapPinIcon from "../assets/icons/map-pin-icon.svg";
+import folderIcon from "../assets/icons/folder-icon.svg";
 
 const UsersChat = () => {
   const [socket, setSocket] = useState(null);
@@ -166,9 +21,16 @@ const UsersChat = () => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [isAttachmentMenuOpen, setIsAttachmentMenuOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
+
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
+  const documentInputRef = useRef(null);
   const menuRef = useRef(null);
   const plusButtonRef = useRef(null);
-
   const messagesEndRef = useRef(null);
 
   const { user } = useMoneyStore();
@@ -235,22 +97,103 @@ const UsersChat = () => {
     };
   }, []);
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (currentMessage.trim() && socket && userInfo.id) {
+  const sendMessage = (messageContent, messageType = 'text') => {
+    if (socket && userInfo.id) {
       const messageData = {
         from: userInfo.id.toString(),
         to: "admin",
-        message: currentMessage,
+        message: messageContent,
         timestamp: new Date(),
+        type: messageType,
       };
       socket.emit("sendMessageFromUser", {
         userId: userInfo.id,
-        message: currentMessage,
+        message: messageContent,
+        type: messageType,
       });
       setMessages((prev) => [...prev, messageData]);
       setCurrentMessage("");
     }
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (currentMessage.trim()) {
+      sendMessage(currentMessage);
+    }
+  };
+
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("ບໍ່ມີ token ກາລຸນາ login ໃໝ່ອີກຄັ້ງ");
+      return;
+    }
+
+    setIsUploading(true);
+    setIsAttachmentMenuOpen(false);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const uploadUrl = "http://localhost:8000/api/chat/upload";
+      const response = await axios.post(uploadUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "authorization": `Bearer ${token}`,
+        },
+      });
+      
+      const { fileUrl, fileType } = response.data; 
+      sendMessage(fileUrl, fileType);
+
+    } catch (error) {
+      console.error("File upload failed:", error);
+      alert("ອັບໂຫຼດ file ບໍ່ສຳເລັດກາລຸນາລອງໃໝ່ອີກຄັ້ງ");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const onFileSelected = (event) => {
+    const file = event.target.files[0];
+    handleFileUpload(file);
+    event.target.value = null;
+  };
+
+  const handleLocationClick = () => {
+    setIsAttachmentMenuOpen(false); 
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+         
+          const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+          
+          
+          window.open(mapUrl, '_blank', 'noopener,noreferrer');
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          alert("ລໍ່ສາມາດເຂົ້າຮອດຕຳແໜ່ງໄດ້ ກາລຸນາກວດສອບການອະນຸຍາດ");
+        }
+      );
+    } else {
+      alert("ບາວເຊີຂອງທ່ານບໍຮັບຮອງການລະບຸຕຳແໜ່ງ");
+    }
+  };
+  
+  const handleRecordAudioClick = () => {
+      alert("ฟังก์ชันบันทึกเสียงยังไม่เปิดให้บริการ");
+      setIsAttachmentMenuOpen(false);
+  }
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+    setIsLightboxOpen(true);
   };
 
   const groupMessagesByDate = (messages) => {
@@ -267,23 +210,65 @@ const UsersChat = () => {
   const groupedMessages = groupMessagesByDate(messages);
 
   const attachmentOptions = [
-    { iconSrc: cameraIcon, label: "ຖ່າຍຮູບ" },
-    { iconSrc: galleryIcon, label: "ຮູບພາບ" },
-    { iconSrc: micIcon, label: "ບັນທຶກສຽງ" },
-    { iconSrc: mapPinIcon, label: "ແຜນທີ່" },
-    { iconSrc: folderIcon, label: "ເອກະສານ" },
+    { iconSrc: cameraIcon, label: "ຖ່າຍຮູບ", handler: () => cameraInputRef.current.click() },
+    { iconSrc: galleryIcon, label: "ຮູບພາບ", handler: () => galleryInputRef.current.click() },
+    { iconSrc: micIcon, label: "ບັນທຶກສຽງ", handler: handleRecordAudioClick },
+    { iconSrc: mapPinIcon, label: "ແຜນທີ່", handler: handleLocationClick },
+    { iconSrc: folderIcon, label: "ເອກະສານ", handler: () => documentInputRef.current.click() },
   ];
- 
+
+  const MessageContent = ({ message, type }) => {
+    const isImage = /\.(jpeg|jpg|gif|png|webp)$/i.test(message);
+    const isMapLink = /google\.com\/maps/i.test(message);
+
+    if (type === 'image' || isImage) {
+      return (
+        <img 
+          src={message} 
+          alt="Sent content" 
+          className="max-w-xs rounded-lg cursor-pointer" 
+          onClick={() => handleImageClick(message)} 
+        />
+      );
+    }
+    if (type === 'location' || isMapLink) {
+        return (
+            <a href={message} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                ເບິ່ງແຜນທີ່
+            </a>
+        );
+    }
+    if (type && type !== 'text' && !isImage && !isMapLink) {
+        const fileName = message.split('/').pop();
+        return (
+             <a href={message} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                ດາວໂຫຼດ: {fileName}
+            </a>
+        )
+    }
+
+    return <p className="text-sm">{message}</p>;
+  };
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-6rem)] w-full bg-white overflow-hidden max-w-4xl mx-auto border rounded-lg shadow-lg">
+      <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={onFileSelected} style={{ display: 'none' }} />
+      <input type="file" accept="image/*" ref={galleryInputRef} onChange={onFileSelected} style={{ display: 'none' }} />
+      <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar" ref={documentInputRef} onChange={onFileSelected} style={{ display: 'none' }} />
+      
+      <Lightbox
+        open={isLightboxOpen}
+        close={() => setIsLightboxOpen(false)}
+        slides={[{ src: selectedImage }]}
+      />
+
       <header className="flex flex-col items-center p-3 border-b bg-white flex-shrink-0">
         <img src={logoImage} alt="M-Money Logo" className="h-12 w-12 mb-1" />
         <h3 className="text-md font-semibold text-gray-800">M-Moneny</h3>
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 bg-gray-50">
-        
+        {/* ... ส่วนที่เหลือของ JSX เหมือนเดิม ... */}
         {isLoadingHistory ? (
            <div className="flex justify-center items-center h-full text-gray-500">
             ກຳລັງໂຫຼດປະຫວັດການສົນທະນາ...
@@ -322,7 +307,7 @@ const UsersChat = () => {
                               : "bg-gray-200 text-gray-900 rounded-bl-none"
                           }`}
                         >
-                          <p className="text-sm">{msg.message}</p>
+                          <MessageContent message={msg.message} type={msg.type} />
                         </div>
                         <span className="text-[10px] text-gray-400 mb-1">
                           {time}
@@ -346,11 +331,10 @@ const UsersChat = () => {
           {attachmentOptions.map((opt, index) => (
             <button
               key={index}
+              onClick={opt.handler} 
               className="flex items-center gap-4 text-gray-700 hover:text-red-600 w-full text-left"
             >
-          
               <img src={opt.iconSrc} alt={opt.label} className="w-6 h-6" />
-         
               <span className="font-medium">{opt.label}</span>
             </button>
           ))}
@@ -377,13 +361,14 @@ const UsersChat = () => {
             placeholder="ພິມຂໍ້ຄວາມນີ້"
             className="flex-1 px-4 py-2 bg-gray-100 focus:outline-none"
             autoComplete="off"
+            disabled={isUploading} 
           />
           <button
             type="submit"
             className="p-2 text-red-500 hover:text-red-600 disabled:text-gray-300"
-            disabled={!currentMessage.trim()}
+            disabled={!currentMessage.trim() || isUploading} 
           >
-            <SendHorizontal size={24} />
+            {isUploading ? <Loader2 className="animate-spin" /> : <SendHorizontal size={24} />}
           </button>
         </form>
       </footer>
