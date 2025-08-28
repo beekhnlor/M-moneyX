@@ -184,7 +184,6 @@ const Service = () => {
         </main>
       </div>
 
-      {/* === เรียกใช้ Component Footer ที่นี่ === */}
       <Footer />
     </>
   );

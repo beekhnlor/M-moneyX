@@ -6,10 +6,11 @@ import { Search, Bell } from 'lucide-react';
 
 const HeaderAdmin = () => {
     const { user } = useMoneyStore((state) => state);
+    console.log('user:', user);
 
-    const getInitials = (email) => {
-        if (!email) return '?';
-        return email.charAt(0).toUpperCase();
+    const getInitials = (user_name) => {
+        if (!user_name) return '?';
+        return user_name.charAt(0).toUpperCase();
     };
 
     return (
@@ -26,22 +27,18 @@ const HeaderAdmin = () => {
                 />
             </div>
 
-           
             <div className='flex items-center gap-4'>
                 <button className='p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors'>
                     <Bell className="h-6 w-6" />
                 </button>
 
-               
                 {user && (
                     <div className='flex items-center gap-3'>
-                     
-                        <div className='w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg'>
-                            {getInitials(user.email)}
+                        <div className='w-10 h-10 rounded-full bg-red-500 flex items-center justify-center text-white font-bold text-lg'>
+                            {getInitials(user.user_name)}
                         </div>
-                  
                         <div className="hidden sm:block">
-                            <p className='text-sm font-medium text-gray-800 dark:text-gray-200'>{user.email}</p>
+                            <p className='text-sm font-medium text-gray-800 dark:text-gray-200'>{user.user_name}</p>
                             <p className='text-xs text-gray-500 dark:text-gray-400'>{user.role}</p>
                         </div>
                     </div>

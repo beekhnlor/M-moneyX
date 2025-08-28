@@ -5,9 +5,7 @@ import serviceGraphic from '../assets/sharp_mobile_purchase.svg';
 import { FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import footerLogo from '../assets/M moneyX.jpeg'; // โลโก้สำหรับ Footer
 
-// =============================================================
-// ===          ส่วนประกอบของ Footer ที่เพิ่มเข้ามา          ===
-// =============================================================
+
 const Footer = () => {
   const companyLinks = [
     { name: 'ກ່ຽວກັບພວກເຮົາ', href: '/about' },

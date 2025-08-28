@@ -6,10 +6,10 @@ const connected = require('../connectdb/connecting')
 const querise = require('../queries/query')
 
 const register = async(req,res)=> {
-    const  { user_name,email,phone_number,password} = req.body
+    const  { user_name,phone_number,password} = req.body
     try{
 
-        const [ CheckUser ] = await connected.query(querise.CheckUser,[email,phone_number])
+        const [ CheckUser ] = await connected.query(querise.CheckUser,[phone_number])
 
         if(CheckUser.length){
             return res.status(400).json({message:"User Already Exit!"})
@@ -19,7 +19,6 @@ const register = async(req,res)=> {
 
         const [ result ] = await connected.query(querise.register,[
             user_name,
-            email,
             phone_number,
             hashPassword,
             new Date(),
@@ -55,7 +54,7 @@ const login = async(req,res)=>{
 
         const payload = {
             id: user.id,
-            email:user.email,
+            user_name: user.user_name,
             phone_number:user.phone_number,
             role:user.role,
         }

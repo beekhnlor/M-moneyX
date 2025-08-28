@@ -268,7 +268,7 @@ const UsersChat = () => {
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 bg-gray-50">
-        {/* ... ส่วนที่เหลือของ JSX เหมือนเดิม ... */}
+        
         {isLoadingHistory ? (
            <div className="flex justify-center items-center h-full text-gray-500">
             ກຳລັງໂຫຼດປະຫວັດການສົນທະນາ...
@@ -303,8 +303,8 @@ const UsersChat = () => {
                         <div
                           className={`px-4 py-2 rounded-xl max-w-xs md:max-w-md break-words shadow ${
                             isUser
-                              ? "bg-red-500 text-white rounded-br-none"
-                              : "bg-gray-200 text-gray-900 rounded-bl-none"
+                              ? "bg-white text-gray-800 rounded-tl-none border border-gray-200"
+                              : "bg-gradient-to-r from-[#f32400] to-[#fc0000] text-white rounded-tr-none"
                           }`}
                         >
                           <MessageContent message={msg.message} type={msg.type} />

@@ -22,7 +22,6 @@ import LayoutAdmin from '../Layout/LayoutAdmin';
 // Admin pages
 import AdminChat from '../admin/AdminChat';
 import Manage from '../admin/Manage';
-import AdminDashboard from "../admin/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -57,7 +56,7 @@ const router = createBrowserRouter([
     ),
     children: [
  
-      { index: true, element: <AdminDashboard /> },
+      { index: true, element: <Manage /> },
       { path: "chat", element: <AdminChat /> },
       { path: "manage", element: <Manage /> }
     ]
