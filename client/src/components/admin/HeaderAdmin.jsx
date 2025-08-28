@@ -27,6 +27,11 @@ const HeaderAdmin = () => {
                 />
             </div>
 
+            <div className='flex '>
+                <h1 className='text-2xl font-bold text-brand-blue'>M-</h1>
+                <h1 className='text-2xl font-bold text-brand-red'>moneyX</h1>
+            </div>
+
             <div className='flex items-center gap-4'>
                 <button className='p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors'>
                     <Bell className="h-6 w-6" />

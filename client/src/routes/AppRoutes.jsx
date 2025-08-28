@@ -22,13 +22,15 @@ import LayoutAdmin from '../Layout/LayoutAdmin';
 // Admin pages
 import AdminChat from '../admin/AdminChat';
 import Manage from '../admin/Manage';
+import LandingPage from "@/pagesUsers/LandingPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LayoutUsers />,
     children: [
-      { index: true, element: <Home /> },
+      // { index:true, element:<LandingPage/>},
+      { index:true, element: <Home /> },
       { path: "service", element: <Service /> },
       { path: "performance", element: <Performance /> },
       { path: "message", element: <Message /> },

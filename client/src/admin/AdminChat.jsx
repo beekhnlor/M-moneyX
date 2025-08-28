@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
-import axios from 'axios';
-import useMoneyStore from '../store/money-store';
-import { FiSend, FiArrowLeft } from 'react-icons/fi';
-import { Plus, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { io } from "socket.io-client";
+import axios from "axios";
+import useMoneyStore from "../store/money-store";
+import { FiSend, FiArrowLeft } from "react-icons/fi";
+import { Plus, Loader2 } from "lucide-react";
 
 import cameraIcon from "../assets/icons/camera-icon.svg";
 import galleryIcon from "../assets/icons/gallery-icon.svg";
@@ -17,7 +17,7 @@ const AdminChat = () => {
   const [chats, setChats] = useState({});
   const [conversations, setConversations] = useState([]);
   const [activeChatUserId, setActiveChatUserId] = useState(null);
-  const [replyMessage, setReplyMessage] = useState('');
+  const [replyMessage, setReplyMessage] = useState("");
   const [isAttachmentMenuOpen, setIsAttachmentMenuOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -32,10 +32,12 @@ const AdminChat = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/chat/conversations');
+        const response = await axios.get(
+          "http://localhost:8000/api/chat/conversations"
+        );
         setConversations(response.data);
       } catch (error) {
-        console.error('Failed to fetch conversations:', error);
+        console.error("Failed to fetch conversations:", error);
       }
     };
     fetchConversations();
@@ -44,22 +46,24 @@ const AdminChat = () => {
   // Connect socket
   useEffect(() => {
     if (!adminUser) return;
-    const newSocket = io('http://localhost:8000');
+    const newSocket = io("http://localhost:8000");
     setSocket(newSocket);
 
-    newSocket.on('connect', () => {
-      newSocket.emit('join', { role: 'admin', adminId: adminUser.id });
+    newSocket.on("connect", () => {
+      newSocket.emit("join", { role: "admin", adminId: adminUser.id });
     });
 
-    newSocket.on('newMessageFromServer', (data) => {
+    newSocket.on("newMessageFromServer", (data) => {
       const { from, message, timestamp, type } = data;
-      if (from === 'admin') return;
+      if (from === "admin") return;
       setChats((prev) => ({
         ...prev,
         [from]: [...(prev[from] || []), { from, message, timestamp, type }],
       }));
       setConversations((prev) => {
-        const idx = prev.findIndex((c) => c.conversation_id.toString() === from.toString());
+        const idx = prev.findIndex(
+          (c) => c.conversation_id.toString() === from.toString()
+        );
         const updatedConvo = {
           conversation_id: from,
           user_name: `User ${from}`,
@@ -67,7 +71,9 @@ const AdminChat = () => {
           last_message_time: timestamp,
         };
         if (idx > -1) {
-          const others = prev.filter((c) => c.conversation_id.toString() !== from.toString());
+          const others = prev.filter(
+            (c) => c.conversation_id.toString() !== from.toString()
+          );
           return [updatedConvo, ...others];
         } else {
           return [updatedConvo, ...prev];
@@ -75,7 +81,7 @@ const AdminChat = () => {
       });
     });
 
-    newSocket.on('connect_error', (err) =>
+    newSocket.on("connect_error", (err) =>
       console.error("Socket connection failed:", err.message)
     );
 
@@ -84,7 +90,7 @@ const AdminChat = () => {
 
   // Scroll to bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chats, activeChatUserId]);
 
   // Handle click outside for attachment menu
@@ -110,16 +116,18 @@ const AdminChat = () => {
     setActiveChatUserId(userId);
     if (!chats[userId]) {
       try {
-        const response = await axios.get(`http://localhost:8000/api/chat/history/${userId}`);
+        const response = await axios.get(
+          `http://localhost:8000/api/chat/history/${userId}`
+        );
         setChats((prev) => ({ ...prev, [userId]: response.data }));
       } catch (error) {
-        console.error('Failed to load chat history for user', userId, error);
+        console.error("Failed to load chat history for user", userId, error);
       }
     }
   };
 
   // Send reply
-  const handleReply = (e, messageType = 'text') => {
+  const handleReply = (e, messageType = "text") => {
     e.preventDefault();
     if (socket && replyMessage.trim() && activeChatUserId && adminUser) {
       const messageData = {
@@ -128,13 +136,21 @@ const AdminChat = () => {
         message: replyMessage,
         type: messageType,
       };
-      socket.emit('sendMessageFromAdmin', messageData);
-      const optimisticMessage = { from: 'admin', message: replyMessage, timestamp: new Date(), type: messageType };
+      socket.emit("sendMessageFromAdmin", messageData);
+      const optimisticMessage = {
+        from: "admin",
+        message: replyMessage,
+        timestamp: new Date(),
+        type: messageType,
+      };
       setChats((prev) => ({
         ...prev,
-        [activeChatUserId]: [...(prev[activeChatUserId] || []), optimisticMessage],
+        [activeChatUserId]: [
+          ...(prev[activeChatUserId] || []),
+          optimisticMessage,
+        ],
       }));
-      setReplyMessage('');
+      setReplyMessage("");
     }
   };
 
@@ -158,12 +174,12 @@ const AdminChat = () => {
       const response = await axios.post(uploadUrl, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "authorization": `Bearer ${token}`,
+          authorization: `Bearer ${token}`,
         },
       });
-      
-      const { fileUrl, fileType } = response.data; 
-      
+
+      const { fileUrl, fileType } = response.data;
+
       const messageData = {
         adminId: adminUser.id,
         targetUserId: activeChatUserId,
@@ -171,12 +187,19 @@ const AdminChat = () => {
         type: fileType,
       };
       socket.emit("sendMessageFromAdmin", messageData);
-      const optimisticMessage = { from: 'admin', message: fileUrl, timestamp: new Date(), type: fileType };
+      const optimisticMessage = {
+        from: "admin",
+        message: fileUrl,
+        timestamp: new Date(),
+        type: fileType,
+      };
       setChats((prev) => ({
         ...prev,
-        [activeChatUserId]: [...(prev[activeChatUserId] || []), optimisticMessage],
+        [activeChatUserId]: [
+          ...(prev[activeChatUserId] || []),
+          optimisticMessage,
+        ],
       }));
-
     } catch (error) {
       console.error("File upload failed:", error);
       alert("File upload failed, please try again.");
@@ -192,26 +215,33 @@ const AdminChat = () => {
   };
 
   const handleLocationClick = () => {
-    setIsAttachmentMenuOpen(false); 
+    setIsAttachmentMenuOpen(false);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
-          
+
           const messageData = {
             adminId: adminUser.id,
             targetUserId: activeChatUserId,
             message: mapUrl,
-            type: 'location',
+            type: "location",
           };
           socket.emit("sendMessageFromAdmin", messageData);
-          const optimisticMessage = { from: 'admin', message: mapUrl, timestamp: new Date(), type: 'location' };
+          const optimisticMessage = {
+            from: "admin",
+            message: mapUrl,
+            timestamp: new Date(),
+            type: "location",
+          };
           setChats((prev) => ({
             ...prev,
-            [activeChatUserId]: [...(prev[activeChatUserId] || []), optimisticMessage],
+            [activeChatUserId]: [
+              ...(prev[activeChatUserId] || []),
+              optimisticMessage,
+            ],
           }));
-
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -222,65 +252,123 @@ const AdminChat = () => {
       alert("Your browser does not support geolocation.");
     }
   };
-  
-  const handleRecordAudioClick = () => {
-      alert("Audio recording function is not yet available.");
-      setIsAttachmentMenuOpen(false);
-  }
 
-  const activeChatMessages = activeChatUserId ? chats[activeChatUserId] || [] : [];
+  const handleRecordAudioClick = () => {
+    alert("Audio recording function is not yet available.");
+    setIsAttachmentMenuOpen(false);
+  };
+
+  const activeChatMessages = activeChatUserId
+    ? chats[activeChatUserId] || []
+    : [];
 
   const attachmentOptions = [
-    { iconSrc: cameraIcon, label: "ຖ່າຍຮູບ", handler: () => cameraInputRef.current.click() },
-    { iconSrc: galleryIcon, label: "ຮູບພາບ", handler: () => galleryInputRef.current.click() },
+    {
+      iconSrc: cameraIcon,
+      label: "ຖ່າຍຮູບ",
+      handler: () => cameraInputRef.current.click(),
+    },
+    {
+      iconSrc: galleryIcon,
+      label: "ຮູບພາບ",
+      handler: () => galleryInputRef.current.click(),
+    },
     { iconSrc: micIcon, label: "ບັນທຶກສຽງ", handler: handleRecordAudioClick },
     { iconSrc: mapPinIcon, label: "ແຜນທີ່", handler: handleLocationClick },
-    { iconSrc: folderIcon, label: "ເອກະສານ", handler: () => documentInputRef.current.click() },
+    {
+      iconSrc: folderIcon,
+      label: "ເອກະສານ",
+      handler: () => documentInputRef.current.click(),
+    },
   ];
 
   const MessageContent = ({ message, type }) => {
-    const isImage = type === 'image' || /\.(jpeg|jpg|gif|png|webp)$/i.test(message);
-    const isMapLink = type === 'location' || /google\.com\/maps/i.test(message);
+    const isImage =
+      type === "image" || /\.(jpeg|jpg|gif|png|webp)$/i.test(message);
+    const isMapLink = type === "location" || /google\.com\/maps/i.test(message);
 
-    if (isImage) {
+    if (type === "image" || isImage) {
       return (
-        <img 
-          src={message} 
-          alt="Sent content" 
-          className="max-w-xs rounded-lg cursor-pointer" 
+        <img
+          src={message}
+          alt="Sent content"
+          className="max-w-xs rounded-lg cursor-pointer"
         />
       );
     }
-    if (isMapLink) {
-        return (
-            <a href={message} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                ເບິ່ງແຜນທີ່
-            </a>
-        );
+    if (type === "location" || isMapLink) {
+      return (
+        <a
+          href={message}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          ເບິ່ງແຜນທີ່
+        </a>
+      );
     }
-    if (type && type !== 'text' && !isImage && !isMapLink) {
-        const fileName = message.split('/').pop();
-        return (
-             <a href={message} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                ດາວໂຫຼດ: {fileName}
-            </a>
-        )
+    if (type && type !== "text" && !isImage && !isMapLink) {
+      const fileName = message.split("/").pop();
+      return (
+        <a
+          href={message}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          ດາວໂຫຼດ: {fileName}
+        </a>
+      );
     }
 
     return <p className="text-sm leading-relaxed">{message}</p>;
   };
+  // --- เพิ่มตรงนี้ก่อน return ---
+  const groupMessagesByDate = (messages) => {
+    return messages.reduce((acc, msg) => {
+      const date = new Date(msg.timestamp).toLocaleDateString("en-GB");
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(msg);
+      return acc;
+    }, {});
+  };
+
+  const groupedMessages = groupMessagesByDate(activeChatMessages);
+
 
   return (
     <div className="flex h-screen bg-gray-100 font-sans">
       {/* Hidden file inputs */}
-      <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={onFileSelected} style={{ display: 'none' }} />
-      <input type="file" accept="image/*" ref={galleryInputRef} onChange={onFileSelected} style={{ display: 'none' }} />
-      <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar" ref={documentInputRef} onChange={onFileSelected} style={{ display: 'none' }} />
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        ref={cameraInputRef}
+        onChange={onFileSelected}
+        style={{ display: "none" }}
+      />
+      <input
+        type="file"
+        accept="image/*"
+        ref={galleryInputRef}
+        onChange={onFileSelected}
+        style={{ display: "none" }}
+      />
+      <input
+        type="file"
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar"
+        ref={documentInputRef}
+        onChange={onFileSelected}
+        style={{ display: "none" }}
+      />
 
       {/* Sidebar (show on desktop OR mobile when no chat selected) */}
       <aside
         className={`${
-          activeChatUserId ? 'hidden md:flex' : 'flex'
+          activeChatUserId ? "hidden md:flex" : "flex"
         } w-full md:w-[300px] bg-white border-r border-gray-200 flex-col shadow-lg`}
       >
         <div className="p-4 border-b border-gray-200">
@@ -313,7 +401,7 @@ const AdminChat = () => {
                 key={convo.conversation_id}
                 onClick={() => selectChat(convo.conversation_id)}
                 className={`flex items-center space-x-3 p-3 cursor-pointer hover:bg-gray-50 transition border-b border-gray-100 ${
-                  activeChatUserId == convo.conversation_id ? 'bg-blue-50' : ''
+                  activeChatUserId == convo.conversation_id ? "bg-blue-50" : ""
                 }`}
               >
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-bold text-lg">
@@ -333,14 +421,19 @@ const AdminChat = () => {
                     </p>
                     <span className="text-[10px] text-gray-500">
                       {convo.last_message_time
-                        ? new Date(convo.last_message_time).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })
-                        : ''}
+                        ? new Date(convo.last_message_time).toLocaleTimeString(
+                            [],
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )
+                        : ""}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 truncate mt-0.5">{convo.last_message}</p>
+                  <p className="text-xs text-gray-500 truncate mt-0.5">
+                    {convo.last_message}
+                  </p>
                 </div>
               </div>
             ))
@@ -353,7 +446,7 @@ const AdminChat = () => {
       {/* Chat window */}
       <main
         className={`flex-1 flex flex-col bg-[#F7F8FC] ${
-          !activeChatUserId ? 'hidden md:flex' : 'flex'
+          !activeChatUserId ? "hidden md:flex" : "flex"
         }`}
       >
         {activeChatUserId ? (
@@ -380,8 +473,9 @@ const AdminChat = () => {
                 </div>
                 <div className="flex flex-col">
                   <h2 className="text-base font-semibold text-gray-800">
-                    {conversations.find((c) => c.conversation_id == activeChatUserId)?.user_name ||
-                      `20 ${activeChatUserId}`}
+                    {conversations.find(
+                      (c) => c.conversation_id == activeChatUserId
+                    )?.user_name || `20 ${activeChatUserId}`}
                   </h2>
                   <span className="text-xs text-gray-500">18/8/2025</span>
                 </div>
@@ -389,39 +483,59 @@ const AdminChat = () => {
             </header>
 
             {/* Messages */}
+            {/* Messages */}
             <div className="flex-1 overflow-y-auto p-6 bg-gradient-to-b from-[#F9FAFB] to-[#F3F4F6]">
-              <div className="flex flex-col space-y-4">
-                {activeChatMessages.map((msg, index) => {
-                  const isAdmin = msg.from === 'admin';
-                  return (
-                    <div
-                      key={index}
-                      className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div className="max-w-[80%] sm:max-w-[70%] flex flex-col">
-                        <div
-                          className={`px-4 py-2 rounded-2xl break-words shadow-md transition ${
-                            isAdmin
-                              ? 'bg-gradient-to-r from-[#f32400] to-[#fc0000] text-white rounded-tr-none'
-                              : 'bg-white text-gray-800 rounded-tl-none border border-gray-200'
-                          }`}
-                        >
-                          <MessageContent message={msg.message} type={msg.type} />
-                        </div>
-                        <span
-                          className={`text-[10px] mt-1 ${
-                            isAdmin ? 'self-end text-purple-200' : 'self-start text-gray-400'
-                          }`}
-                        >
-                          {new Date(msg.timestamp).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </span>
-                      </div>
+              <div className="flex flex-col space-y-6">
+                {Object.entries(groupedMessages).map(([date, msgs]) => (
+                  <div key={date}>
+                    {/* แถบวันที่ */}
+                    <div className="flex justify-center mb-4">
+                      <span className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-full">
+                        {date}
+                      </span>
                     </div>
-                  );
-                })}
+
+                    {/* ข้อความในวันนั้น */}
+                    {msgs.map((msg, index) => {
+                      const isAdmin = msg.from === "admin";
+                      return (
+                        <div
+                          key={index}
+                          className={`flex ${
+                            isAdmin ? "justify-end" : "justify-start"
+                          } mb-2`}
+                        >
+                          <div className="max-w-[80%] sm:max-w-[70%] flex flex-col">
+                            <div
+                              className={`px-4 py-2 rounded-2xl break-words shadow-md transition ${
+                                isAdmin
+                                  ? "bg-gradient-to-r from-[#f32400] to-[#fc0000] text-white rounded-tr-none"
+                                  : "bg-white text-gray-800 rounded-tl-none border border-gray-200"
+                              }`}
+                            >
+                              <MessageContent
+                                message={msg.message}
+                                type={msg.type}
+                              />
+                            </div>
+                            <span
+                              className={`text-[10px] mt-1 ${
+                                isAdmin
+                                  ? "self-end text-purple-200"
+                                  : "self-start text-gray-400"
+                              }`}
+                            >
+                              {new Date(msg.timestamp).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
                 <div ref={messagesEndRef} />
               </div>
             </div>
@@ -430,16 +544,19 @@ const AdminChat = () => {
             {isAttachmentMenuOpen && (
               <div
                 ref={menuRef}
-              
                 className="absolute bottom-20 left-4 md:left-[500px] bg-white p-4 rounded-lg shadow-lg border border-gray-200 flex flex-col gap-4 z-10"
               >
                 {attachmentOptions.map((opt, index) => (
                   <button
                     key={index}
-                    onClick={opt.handler} 
+                    onClick={opt.handler}
                     className="flex items-center gap-4 text-gray-700 hover:text-red-600 w-full text-left"
                   >
-                    <img src={opt.iconSrc} alt={opt.label} className="w-6 h-6" />
+                    <img
+                      src={opt.iconSrc}
+                      alt={opt.label}
+                      className="w-6 h-6"
+                    />
                     <span className="font-medium">{opt.label}</span>
                   </button>
                 ))}
@@ -448,7 +565,10 @@ const AdminChat = () => {
 
             {/* Input */}
             <footer className="bg-white p-4 border-t border-gray-200 shadow-lg relative">
-              <form className="flex items-center space-x-3" onSubmit={handleReply}>
+              <form
+                className="flex items-center space-x-3"
+                onSubmit={handleReply}
+              >
                 {/* ปุ่ม + */}
                 <button
                   ref={plusButtonRef}
@@ -473,14 +593,20 @@ const AdminChat = () => {
                   className="p-3 bg-gradient-to-r from-[#f11c00] to-[#f70000] text-white rounded-full shadow-md hover:shadow-lg hover:scale-105 transition disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
                   disabled={!replyMessage.trim() || isUploading}
                 >
-                  {isUploading ? <Loader2 className="animate-spin" size={18} /> : <FiSend size={18} />}
+                  {isUploading ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : (
+                    <FiSend size={18} />
+                  )}
                 </button>
               </form>
             </footer>
           </>
         ) : (
           <div className="hidden md:flex items-center justify-center h-full">
-            <p className="text-xl text-gray-400">Select a conversation to start chatting</p>
+            <p className="text-xl text-gray-400">
+              Select a conversation to start chatting
+            </p>
           </div>
         )}
       </main>

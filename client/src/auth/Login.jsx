@@ -143,7 +143,7 @@ const Login = () => {
     };
   
     return (
-        // ใช้ React Fragment (<>...</>) เพื่อรวมเนื้อหาและ Footer
+    
         <>
             <div className="flex min-h-[calc(85vh-6rem)] items-center bg-white">
                 <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-4">

@@ -14,17 +14,16 @@ import tplusLogo from '../assets/topups/2.jpeg';
 import etlLogo from '../assets/topups/3.jpeg';
 import monomaxLogo from '../assets/others/1.jpeg';
 import wetvLogo from '../assets/others/2.jpeg';
-import footerLogo from '../assets/M moneyX.jpeg'; // **เพิ่ม:** โลโก้สำหรับ Footer
+import footerLogo from '../assets/M moneyX.jpeg';
 
-// === Import ไอคอนสำหรับหน้า Service และ Footer ===
+
 import { BsDropletFill, BsFillLightningFill, BsRouterFill } from 'react-icons/bs';
 import { FaFileInvoiceDollar, FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { IoGameController } from 'react-icons/io5';
 
+import "@fontsource/noto-sans-lao"; 
 
-// =============================================================
-// ===          ส่วนประกอบของ Footer ที่เพิ่มเข้ามา          ===
-// =============================================================
+
 const Footer = () => {
   const companyLinks = [
     { name: 'ກ່ຽວກັບພວກເຮົາ', href: '/about' },
@@ -49,7 +48,7 @@ const Footer = () => {
               <img src={footerLogo} alt="M-Money Logo" className="h-10 w-10" />
               <span className="text-2xl font-bold text-white">M-MONEY</span>
             </div>
-            <p className="mt-4 text-sm text-gray-200">
+            <p className="mt-4 text-sm text-gray-200 font-lao">
               More Smart Life in Digital Era. ໃຊ້ຊີວິດໃຫ້ງ່າຍຂຶ້ນໃນຍຸກດິຈິຕອນ.
             </p>
             <div className="flex space-x-4 mt-6">
@@ -102,9 +101,6 @@ const Footer = () => {
 };
 
 
-// =============================================================
-// ===     ส่วนประกอบหลักของหน้า Service (โค้ดเก่าของคุณ)     ===
-// =============================================================
 const ServiceCard = ({ title, children, buttonText }) => (
     <div className="bg-white rounded-xl shadow-lg p-6 flex flex-col text-center">
       <h2 className="text-xl font-bold mb-6 text-gray-800">{title}</h2>
