@@ -7,11 +7,8 @@ import { FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa'
 
 // === Import ໂລໂກ້ຕ່າງໆ ===
 import mainLogoUrl from '../assets/logo-big.png';
-import footerLogo from '../assets/M moneyX.jpeg'; // โลโก้สำหรับ Footer
+import footerLogo from '../assets/M moneyX.jpeg'; 
 
-// =============================================================
-// ===          ส่วนประกอบของ Footer ที่เพิ่มเข้ามา          ===
-// =============================================================
 const Footer = () => {
   const companyLinks = [
     { name: 'ກ່ຽວກັບພວກເຮົາ', href: '/about' },
@@ -88,10 +85,6 @@ const Footer = () => {
   );
 };
 
-
-// =============================================================
-// ===     ส่วนประกอบหลักของหน้า Download (โค้ดเก่าของคุณ)    ===
-// =============================================================
 const DownloadChannel = () => {
   const navigate = useNavigate();
 
@@ -112,7 +105,7 @@ const DownloadChannel = () => {
   };
 
   return (
-    // ใช้ React Fragment (<>...</>) เพื่อรวมเนื้อหาและ Footer
+ 
     <>
       <div className="bg-white min-h-screen font-sans">
         <main className="container mx-auto px-4 py-8">
@@ -157,7 +150,6 @@ const DownloadChannel = () => {
         </main>
       </div>
       
-      {/* === เรียกใช้ Component Footer ที่นี่ === */}
       <Footer />
     </>
   );

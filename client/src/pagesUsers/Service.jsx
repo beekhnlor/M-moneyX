@@ -21,7 +21,7 @@ import { BsDropletFill, BsFillLightningFill, BsRouterFill } from 'react-icons/bs
 import { FaFileInvoiceDollar, FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { IoGameController } from 'react-icons/io5';
 
-import "@fontsource/noto-sans-lao"; 
+import "@fontsource/noto-sans-lao";
 
 
 const Footer = () => {
@@ -42,7 +42,7 @@ const Footer = () => {
     <footer className="bg-red-600 text-white font-sans">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          
+
           <div className="md:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2">
               <img src={footerLogo} alt="M-Money Logo" className="h-10 w-10" />
@@ -91,7 +91,7 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <hr className="border-gray-400 opacity-50 my-8" /> 
+        <hr className="border-gray-400 opacity-50 my-8" />
         <div className="text-center text-sm text-gray-200">
           <p>&copy; {new Date().getFullYear()} M-Money by Lao Telecom. All Rights Reserved.</p>
         </div>
@@ -116,7 +116,7 @@ const ServiceCard = ({ title, children, buttonText }) => (
       )}
     </div>
   );
-  
+
   const ServiceItem = ({ icon, label }) => (
     <div className="flex flex-col items-center text-center px-2 w-1/4">
       <div className="w-16 h-16 mb-2 flex items-center justify-center">
@@ -125,7 +125,7 @@ const ServiceCard = ({ title, children, buttonText }) => (
       <p className="text-sm text-gray-700 mt-1 leading-tight">{label}</p>
     </div>
   );
-  
+
 const Service = () => {
   const banks = [
     { name: 'BCEL', logo: bcelLogo }, { name: 'JDB', logo: jdbLogo }, { name: 'Lao Viet Bank', logo: laoVietBankLogo }, { name: 'Maruhan', logo: maruhanLogo }, { name: 'STB', logo: stbLogo }, { name: 'Indochina', logo: indochinaLogo }, { name: 'BIC Bank', logo: bicBankLogo }, { name: 'Bank Bank', logo: bankbank },
@@ -138,7 +138,7 @@ const Service = () => {
   ];
 
   return (
-    // ใช้ React Fragment (<>...</>) เพื่อรวมเนื้อหาและ Footer
+  
     <>
       <div className="bg-gray-50 min-h-screen font-sans">
         <main className="container mx-auto p-4 md:p-28">
